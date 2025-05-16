@@ -1,0 +1,85 @@
+QMainWindow {
+    background-color: #F0F2F5;
+    font-family: 'Inter', 'Poppins', sans-serif;
+    font-size: 16px;
+}
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #E0EAF4, stop:1 #D0E0EA);
+    border: 1px solid #B0C4DE;
+    border-radius: 10px;
+    padding: 10px;
+    color: #2D3436;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #D0E0EA, stop:1 #C0D6E4);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+}
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #C0D6E4, stop:1 #B0C4DE);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+QLineEdit {
+    background-color: #FFFFFF;
+    border: 1px solid #B0C4DE;
+    border-radius: 8px;
+    padding: 6px;
+    color: #2D3436;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+QLineEdit:focus {
+    border: 1px solid #A3BFFA;
+    box-shadow: 2px 2px 6px rgba(163, 191, 250, 0.3);
+}
+QLabel {
+    color: #2D3436;
+    padding: 6px;
+    font-weight: bold;
+}
+QLabel#headerLabel {
+    font-size: 320px;
+    font-weight: bold;
+}
+QCheckBox {
+    color: #2D3436;
+    padding: 6px;
+}
+QCheckBox::indicator {
+    border: 1px solid #A3BFFA;
+    background-color: #FFFFFF;
+    border-radius: 4px;
+}
+QCheckBox::indicator:checked {
+    background-color: #A3BFFA;
+}
+QListWidget {
+    background-color: #FFFFFF;
+    border: 1px solid #B0C4DE;
+    border-radius: 8px;
+    color: #2D3436;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+QComboBox {
+    background-color: #FFFFFF;
+    border: 1px solid #B0C4DE;
+    border-radius: 8px;
+    padding: 6px;
+    color: #2D3436;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.05);
+}
+QComboBox:focus {
+    border: 1px solid #A3BFFA;
+    box-shadow: 2px 2px 6px rgba(163, 191, 250, 0.3);
+}
+QMessageBox {
+    background-color: #F0F2F5;
+    color: #2D3436;
+}
+QMessageBox QPushButton {
+    background-color: #E0EAF4;
+    border: 1px solid #B0C4DE;
+    border-radius: 8px;
+    padding: 6px;
+    color: #2D3436;
+}

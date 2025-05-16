@@ -1,0 +1,87 @@
+QMainWindow {
+    background-color: #1A1A1A;
+    font-family: 'Inter', 'Poppins', sans-serif;
+    font-size: 16px;
+}
+QPushButton {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 10px;
+    color: #E0E0E0;
+    box-shadow: 0 4px 15px rgba(0, 221, 235, 0.2);
+    transition: all 0.3s ease;
+}
+QPushButton:hover {
+    background-color: rgba(0, 221, 235, 0.2);
+    border: 1px solid #00DDEB;
+    box-shadow: 0 6px 20px rgba(0, 221, 235, 0.4);
+}
+QPushButton:pressed {
+    background-color: rgba(255, 46, 99, 0.2);
+    border: 1px solid #FF2E63;
+    box-shadow: 0 2px 10px rgba(255, 46, 99, 0.3);
+}
+QLineEdit {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 6px;
+    color: #E0E0E0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+QLineEdit:focus {
+    border: 1px solid #00DDEB;
+    box-shadow: 0 4px 15px rgba(0, 221, 235, 0.3);
+}
+QLabel {
+    color: #E0E0E0;
+    padding: 6px;
+    font-weight: bold;
+}
+QLabel#headerLabel {
+    font-size: 320px;
+    font-weight: bold;
+}
+QCheckBox {
+    color: #E0E0E0;
+    padding: 6px;
+}
+QCheckBox::indicator {
+    border: 1px solid #00DDEB;
+    background-color: rgba(50, 50, 50, 0.8);
+    border-radius: 4px;
+}
+QCheckBox::indicator:checked {
+    background-color: #00DDEB;
+}
+QListWidget {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #E0E0E0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+QComboBox {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 6px;
+    color: #E0E0E0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+QComboBox:focus {
+    border: 1px solid #00DDEB;
+    box-shadow: 0 4px 15px rgba(0, 221, 235, 0.3);
+}
+QMessageBox {
+    background-color: #1A1A1A;
+    color: #E0E0E0;
+}
+QMessageBox QPushButton {
+    background-color: rgba(50, 50, 50, 0.8);
+    border: 1px solid #00DDEB;
+    border-radius: 8px;
+    padding: 6px;
+    color: #E0E0E0;
+}
