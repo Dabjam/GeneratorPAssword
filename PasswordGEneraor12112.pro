@@ -24,7 +24,6 @@ FORMS += \
     mainwindow.ui
 
 RESOURCES += \
-    resources.qrc \
     styles.qrc
 
 # Подключение OpenSSL

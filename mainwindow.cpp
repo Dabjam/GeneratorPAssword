@@ -20,7 +20,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
     ui(new Ui::MainWindow),
-    settings("MyCompany", "PasswordGenerator") {
+    settings("MyCompany", "PasswordGenerator"),
+    masterPasswordSet(false),
+    previousPage(MainMenu),
+    currentTheme(Theme::Dark) {
     ui->setupUi(this);
 
     // Инициализация объектов
@@ -29,10 +32,23 @@ MainWindow::MainWindow(QWidget *parent)
     clipboard = std::make_unique<ClipboardHandler>();
 
     if (!generator || !manager || !clipboard) {
-        qWarning() << "Не удалось инициализировать один или несколько объектов";
-        QCoreApplication::exit(0);
+        qWarning() << "Failed to initialize one or more objects";
+        QCoreApplication::exit(1);
         return;
     }
+
+    // Загрузка сохранённой темы или установка тёмной по умолчанию
+    QString savedTheme = settings.value("theme", "dark").toString();
+    currentTheme = (savedTheme == "light") ? Theme::Light : Theme::Dark;
+
+    // Применение начальной темы
+    applyTheme();
+
+    // Программное добавление кнопки переключения тем
+    QPushButton *themeToggleBtn = new QPushButton(ui->stackedWidget->widget(MainMenu));
+    themeToggleBtn->setObjectName("themeToggleBtn");
+    themeToggleBtn->setGeometry(410, 20, 70, 40);
+    themeToggleBtn->setText(currentTheme == Theme::Light ? tr("Ночь") : tr("День"));
 
     // Запрос мастер-пароля
     if (!requestMasterPassword()) {
@@ -53,19 +69,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->passwordTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->passwordTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->passwordTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    // Загрузка сохранённой темы или установка тёмной по умолчанию
-    QString savedTheme = settings.value("theme", "dark").toString();
-    currentTheme = (savedTheme == "light") ? Theme::Light : Theme::Dark;
-
-    // Программное добавление кнопки переключения тем
-    QPushButton *themeToggleBtn = new QPushButton(ui->stackedWidget->widget(MainMenu));
-    themeToggleBtn->setObjectName("themeToggleBtn");
-    themeToggleBtn->setGeometry(410, 20, 70, 40);
-    themeToggleBtn->setText(currentTheme == Theme::Light ? tr("Ночь") : tr("День"));
-
-    // Применение начальной темы
-    applyTheme();
 
     // Проверка objectName для заголовков
     QList<QLabel*> labels = ui->stackedWidget->findChildren<QLabel*>();
@@ -206,11 +209,14 @@ bool MainWindow::requestMasterPassword() {
 QString MainWindow::showMasterPasswordDialog(bool firstAttempt, bool &ok) {
     QDialog dialog(this);
     dialog.setWindowTitle(tr("Мастер-пароль"));
+    dialog.setWindowFlags(Qt::Window);
+    dialog.setMinimumWidth(300); // Устанавливаем минимальную ширину диалога
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLabel *label = new QLabel(firstAttempt ? tr("Введите мастер-пароль для доступа к паролям:") :
                                    tr("Мастер-пароль неверный. Введите снова:"));
+    label->setWordWrap(true); // Перенос текста, если он слишком длинный
     layout->addWidget(label);
 
     QLineEdit *passwordInput = new QLineEdit();
@@ -223,17 +229,31 @@ QString MainWindow::showMasterPasswordDialog(bool firstAttempt, bool &ok) {
         passwordInput->setEchoMode(state == Qt::Checked ? QLineEdit::Normal : QLineEdit::Password);
     });
 
-    QPushButton *hintButton = new QPushButton(tr("Показать подсказку"));
+    // Настраиваем кнопки друг под другом
+    QPushButton *enterButton = new QPushButton(tr("Войти"));
+    QPushButton *hintButton = new QPushButton(tr("Подсказать подсказку"));
+
+    // Устанавливаем политику размера для растяжки кнопок
+    enterButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    hintButton->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    // Устанавливаем минимальную высоту кнопок
+    enterButton->setMinimumHeight(30);
+    hintButton->setMinimumHeight(30);
+
+    // Устанавливаем отступы и выравнивание текста
+    enterButton->setStyleSheet("QPushButton { padding: 5px; text-align: center; }");
+    hintButton->setStyleSheet("QPushButton { padding: 5px; text-align: center; }");
+
+    // Добавляем кнопки вертикально
+    layout->addWidget(enterButton);
     layout->addWidget(hintButton);
+
     connect(hintButton, &QPushButton::clicked, this, &MainWindow::showHint);
+    connect(enterButton, &QPushButton::clicked, &dialog, &QDialog::accept);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
-    buttonBox->button(QDialogButtonBox::Ok)->setText(tr("ОК"));
-    buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Отмена"));
-    layout->addWidget(buttonBox);
-
-    connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+    // Устанавливаем фокус на кнопку "Войти" по умолчанию
+    enterButton->setDefault(true);
 
     int result = dialog.exec();
     ok = (result == QDialog::Accepted);
@@ -245,10 +265,13 @@ QString MainWindow::showMasterPasswordDialog(bool firstAttempt, bool &ok) {
 QString MainWindow::showNewMasterPasswordDialog(bool &ok) {
     QDialog dialog(this);
     dialog.setWindowTitle(tr("Новый мастер-пароль"));
+    dialog.setWindowFlags(Qt::Window);
+    dialog.setMinimumWidth(300); // Устанавливаем минимальную ширину диалога
 
     QVBoxLayout *layout = new QVBoxLayout(&dialog);
 
     QLabel *label = new QLabel(tr("Введите новый мастер-пароль:"));
+    label->setWordWrap(true); // Перенос текста
     layout->addWidget(label);
 
     QLineEdit *passwordInput = new QLineEdit();
@@ -262,7 +285,7 @@ QString MainWindow::showNewMasterPasswordDialog(bool &ok) {
     });
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, &dialog);
-    buttonBox->button(QDialogButtonBox::Ok)->setText(tr("ОК"));
+    buttonBox->button(QDialogButtonBox::Ok)->setText(tr("Войти"));
     buttonBox->button(QDialogButtonBox::Cancel)->setText(tr("Отмена"));
     layout->addWidget(buttonBox);
 
@@ -320,11 +343,14 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::applyTheme() {
     QFile styleFile(currentTheme == Theme::Light ? ":/light.qss" : ":/dark.qss");
-    if (styleFile.open(QFile::ReadOnly)) {
-        QString styleSheet = QLatin1String(styleFile.readAll());
-        setStyleSheet(styleSheet);
-        styleFile.close();
+    if (!styleFile.open(QFile::ReadOnly)) {
+        qWarning() << "Failed to open stylesheet file";
+        return;
     }
+    QString styleSheet = QLatin1String(styleFile.readAll());
+    setStyleSheet(styleSheet);
+    styleFile.close();
+
     QPushButton *themeToggleBtn = findChild<QPushButton*>("themeToggleBtn");
     if (themeToggleBtn) {
         themeToggleBtn->setText(currentTheme == Theme::Light ? tr("Ночь") : tr("День"));
@@ -383,8 +409,6 @@ void MainWindow::generateAndHandlePassword(const QString &password) {
     clipboard->copyToClipboard(password);
     QMessageBox::information(this, tr("Успех"), tr("Сгенерированный пароль: %1\nСложность: %2\nСкопирован в буфер обмена!").arg(password, strength));
     showMainMenu();
-    QString temp;
-    temp.swap(const_cast<QString&>(password));
 }
 
 void MainWindow::generateCustomPassword() {
@@ -484,8 +508,6 @@ void MainWindow::viewPassword() {
     ui->keyInputView->clear();
     ui->showKeyViewCheck->setChecked(false);
     ui->keyInputView->setEchoMode(QLineEdit::Password);
-    QString temp;
-    temp.swap(const_cast<QString&>(password));
 }
 
 void MainWindow::removePassword() {

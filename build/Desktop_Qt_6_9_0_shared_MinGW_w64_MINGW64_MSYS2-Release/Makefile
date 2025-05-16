@@ -259,6 +259,7 @@ Makefile: ../../PasswordGEneraor12112.pro ../../../msys64/mingw64/share/qt6/mksp
 		../../../msys64/mingw64/share/qt6/mkspecs/features/qt_config.prf \
 		../../../msys64/mingw64/share/qt6/mkspecs/win32-g++/qmake.conf \
 		../../../msys64/mingw64/share/qt6/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../msys64/mingw64/share/qt6/mkspecs/features/exclusive_builds.prf \
 		../../../msys64/mingw64/share/qt6/mkspecs/features/toolchain.prf \
 		../../../msys64/mingw64/share/qt6/mkspecs/features/default_pre.prf \
@@ -285,9 +286,7 @@ Makefile: ../../PasswordGEneraor12112.pro ../../../msys64/mingw64/share/qt6/mksp
 		../../../msys64/mingw64/share/qt6/mkspecs/features/lex.prf \
 		../../PasswordGEneraor12112.pro \
 		../../../msys64/mingw64/lib/Qt6EntryPoint.prl \
-		.qmake.stash \
 		../../../msys64/mingw64/share/qt6/mkspecs/features/build_pass.prf \
-		../../resources.qrc \
 		../../styles.qrc
 	$(QMAKE) -o Makefile ..\..\PasswordGEneraor12112.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
 ../../../msys64/mingw64/share/qt6/mkspecs/features/spec_pre.prf:
@@ -479,6 +478,7 @@ Makefile: ../../PasswordGEneraor12112.pro ../../../msys64/mingw64/share/qt6/mksp
 ../../../msys64/mingw64/share/qt6/mkspecs/features/qt_config.prf:
 ../../../msys64/mingw64/share/qt6/mkspecs/win32-g++/qmake.conf:
 ../../../msys64/mingw64/share/qt6/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../msys64/mingw64/share/qt6/mkspecs/features/exclusive_builds.prf:
 ../../../msys64/mingw64/share/qt6/mkspecs/features/toolchain.prf:
 ../../../msys64/mingw64/share/qt6/mkspecs/features/default_pre.prf:
@@ -505,9 +505,7 @@ Makefile: ../../PasswordGEneraor12112.pro ../../../msys64/mingw64/share/qt6/mksp
 ../../../msys64/mingw64/share/qt6/mkspecs/features/lex.prf:
 ../../PasswordGEneraor12112.pro:
 ../../../msys64/mingw64/lib/Qt6EntryPoint.prl:
-.qmake.stash:
 ../../../msys64/mingw64/share/qt6/mkspecs/features/build_pass.prf:
-../../resources.qrc:
 ../../styles.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ..\..\PasswordGEneraor12112.pro -spec win32-g++ "CONFIG+=qtquickcompiler"
